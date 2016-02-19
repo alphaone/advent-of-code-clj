@@ -1,37 +1,36 @@
 (ns advent.2)
 
-(defn extra [v]
-  (let [sorted (sort v)]
-    (* (first sorted) (second sorted))))
+(defn measurements [input]
+  (->> (clojure.string/split input #"x")
+       (map read-string)))
 
-(defn paper [in]
-  (let [v (->> (clojure.string/split in #"x")
-               (map read-string))
-        l (first v)
-        w (second v)
-        h (get (vec v) 2)]
+(defn extra [measurements]
+  (let [[longest second _] (sort measurements)]
+    (* longest second)))
+
+(defn paper [input]
+  (let [[l w h] (measurements input)]
     (+ (* 2 l w)
        (* 2 w h)
        (* 2 l h)
-       (extra v)))
-  
-  )
+       (extra [l w h]))))
 
-(defn papers [in]
-  (let [ps (clojure.string/split in #"\n")]
-    (reduce + (map paper ps))))
+(defn papers [input]
+  (->> (clojure.string/split input #"\n")
+       (map paper)
+       (reduce +)))
 
 
 (defn bow [v]
   (apply * v))
 
-(defn ribbon [in]
-  (let [v (->> (clojure.string/split in #"x")
-               (map read-string))
-        sorted (sort v)]
-    (+ (* 2 (+ (first sorted) (second sorted)))
-       (bow v))))
+(defn ribbon [input]
+  (let [measurements (measurements input)
+        [longest second _] (sort measurements)]
+    (+ (* 2 (+ longest second))
+       (bow measurements))))
 
-(defn ribbons [in]
-  (let [ps (clojure.string/split in #"\n")]
-    (reduce + (map ribbon ps))))
+(defn ribbons [input]
+  (->> (clojure.string/split input #"\n")
+       (map ribbon)
+       (reduce +)))
