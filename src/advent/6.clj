@@ -3,10 +3,6 @@
 (defn empty-grid [x y]
   (vec (for [_ (range y)]
          (vec (for [_ (range x)]
-                false)))))
-(defn empty-grid2 [x y]
-  (vec (for [_ (range y)]
-         (vec (for [_ (range x)]
                 0)))))
 
 (defn extract-action [line]
@@ -24,39 +20,25 @@
 (defn parse-line [line]
   [(extract-action line) (extract-coordinates line)])
 
-(defn switch-single-light [action grid coords]
+(defn switch-single-light-on-off [action grid coords]
   (case action
-    :off (assoc-in grid coords false)
-    :on (assoc-in grid coords true)
-    :toggle (update-in grid coords not)))
+    :off (assoc-in grid coords 0)
+    :on (assoc-in grid coords 1)
+    :toggle (update-in grid coords #(mod (inc %) 2))))
 
-(defn switch-single-instruction [grid [action coords-list]]
-  (reduce (partial switch-single-light action) grid coords-list))
+(defn switch-single-light-brightness [action grid coords]
+  (case action
+    :off (update-in grid coords (fn [x] (max (dec x) 0)))
+    :on (update-in grid coords inc)
+    :toggle (update-in grid coords (partial + 2))))
 
-(defn lighten-up-grid [grid instructions]
-   (->> (clojure.string/split instructions #"\n")
-        (map parse-line)
-        (reduce switch-single-instruction grid)))
+(defn switch-single-instruction [switch-fn grid [action coords-list]]
+  (reduce (partial switch-fn action) grid coords-list))
 
-(defn count-lights [grid]
-  (->> grid
-       (flatten)
-       (filter true?)
-       (count)))
-
-(defn switch-single-light2 [action grid coords]
- (case action
-   :off (update-in grid coords (fn [x] (max (dec x) 0)))
-   :on (update-in grid coords inc)
-   :toggle (update-in grid coords (partial + 2))))
-
-(defn switch-single-instruction2 [grid [action coords-list]]
- (reduce (partial switch-single-light2 action) grid coords-list))
-
-(defn lighten-up-grid2 [grid instructions]
+(defn lighten-up-grid [switch-fn grid instructions]
   (->> (clojure.string/split instructions #"\n")
        (map parse-line)
-       (reduce switch-single-instruction2 grid)))
+       (reduce (partial switch-single-instruction switch-fn) grid)))
 
-(defn count-lights2 [grid]
+(defn count-lights [grid]
   (reduce + (flatten grid)))
