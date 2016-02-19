@@ -1,18 +1,24 @@
 (ns advent.1)
 
-(defn c [i ch]
-  (->> i
-       (filter #(= ch %))
+(defn count-char [ch input]
+  (->> (filter #(= ch %) input)
        (count)))
 
-(defn floor [i]
-  (- (c i \() 
-     (c i \))))
+(defn last-floor [input]
+  (- (count-char \( input)
+     (count-char \) input)))
 
-(defn basement-enter [input]
-  (loop [i 1 in input f 0]
-    (let [c (first in)
-          new-f (if (= c \() (inc f) (dec f))]
-      (if (> 0 new-f)
-        i
-        (recur (inc i) (rest in) new-f)))))
+(defn move [cur-floor ch]
+  (case ch
+    \( (inc cur-floor)
+    \) (dec cur-floor)))
+
+(defn run-stairs [{:keys [i floor in-basement?]} ch]
+  (let [new-floor (move floor ch)]
+    {:floor        new-floor
+     :in-basement? (or (< new-floor 0) in-basement?)
+     :i            (if in-basement? i (inc i))}))
+
+(defn floor-on-entering-basement [input]
+  (-> (reduce run-stairs {:i 0 :floor 0} input)
+      :i))
