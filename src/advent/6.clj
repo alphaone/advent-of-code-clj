@@ -1,10 +1,5 @@
 (ns advent.6)
 
-(defn empty-grid [x y]
-  (vec (for [_ (range y)]
-         (vec (for [_ (range x)]
-                0)))))
-
 (defn extract-action [line]
   (case (second (re-find #"(turn on|turn off|toggle)" line))
     "turn off" :off
@@ -22,23 +17,24 @@
 
 (defn switch-single-light-on-off [action grid coords]
   (case action
-    :off (assoc-in grid coords 0)
-    :on (assoc-in grid coords 1)
-    :toggle (update-in grid coords #(mod (inc %) 2))))
+    :off (assoc grid coords 0)
+    :on (assoc grid coords 1)
+    :toggle (update grid coords #(mod ((fnil inc 0) %) 2))))
 
 (defn switch-single-light-brightness [action grid coords]
   (case action
-    :off (update-in grid coords (fn [x] (max (dec x) 0)))
-    :on (update-in grid coords inc)
-    :toggle (update-in grid coords (partial + 2))))
+    :off (update grid coords #(max ((fnil dec 0) %) 0))
+    :on (update grid coords (fnil inc 0))
+    :toggle (update grid coords #((fnil + 0) % 2))))
 
 (defn switch-single-instruction [switch-fn grid [action coords-list]]
   (reduce (partial switch-fn action) grid coords-list))
 
-(defn lighten-up-grid [switch-fn grid instructions]
+(defn lighten-up-grid [switch-fn instructions]
   (->> (clojure.string/split instructions #"\n")
        (map parse-line)
-       (reduce (partial switch-single-instruction switch-fn) grid)))
+       (reduce (partial switch-single-instruction switch-fn) {})))
 
 (defn count-lights [grid]
-  (reduce + (flatten grid)))
+  (->> (vals grid) 
+       (reduce +)))
