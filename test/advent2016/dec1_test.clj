@@ -20,6 +20,21 @@
            (-> (cs/split puzzle-str #", ")
                (a/follow))))))
 
+(deftest b-test
+  (testing "instructions are R8, R4, R4, R8, the first location you visit twice is 4 blocks away"
+    (is (= 4
+           (a/follow-b ["R8" "R4" "R4" "R8"]))))
+  (testing "puzzle"
+    (is (= 110
+           (-> (cs/split puzzle-str #", ")
+               (a/follow-b))))))
+
+(deftest turn-test
+  (testing "turn"
+    (is (= "W" (a/turn "N" "L")))
+    (is (= "W" (a/turn "S" "R")))
+    (is (= "W" (a/turn "W" "S")))))
+
 (deftest moving-test
   (testing "move-coords"
     (is (= [0 1]
@@ -36,3 +51,8 @@
   (testing "split instruction"
     (is (= ["R" 2]
            (a/split-instr "R2")))))
+
+(deftest expand-test
+  (testing "expand"
+    (is (= ["R1" "S1" "S1"]
+           (a/expand "R3")))))
