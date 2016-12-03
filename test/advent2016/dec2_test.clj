@@ -6,7 +6,9 @@
 (deftest a-test
   (testing "it finds the code"
     (is (= "1985"
-           (a/parse-instruction a/keypad-a "ULL\nRRDDD\nLURDL\nUUUUD"))))
+           (a/parse-instruction a/keypad-a "ULL\nRRDDD\nLURDL\nUUUUD")))
+    (is (= "5DB3"
+           (a/parse-instruction a/keypad-b "ULL\nRRDDD\nLURDL\nUUUUD"))))
   (testing "it follows the direction in one line"
     (is (= "1"
            (first (a/follow a/keypad-a ["5" []] "ULL"))))
@@ -16,11 +18,25 @@
            (first (a/follow a/keypad-a ["9" []] "LURDL"))))
     (is (= "5"
            (first (a/follow a/keypad-a ["8" []] "UUUUD")))))
-  (testing "puzzle"
+  (testing "it follows the direction in one line B"
+    (is (= "5"
+           (first (a/follow a/keypad-b ["5" []] "ULL"))))
+    (is (= "D"
+           (first (a/follow a/keypad-b ["5" []] "RRDDD"))))
+    (is (= "B"
+           (first (a/follow a/keypad-b ["D" []] "LURDL"))))
+    (is (= "3"
+           (first (a/follow a/keypad-b ["B" []] "UUUUD")))))
+  (testing "puzzle A"
     (is (= "65556"
            (->> (io/resource "dec2.txt")
                 (slurp)
-                (a/parse-instruction a/keypad-a))))))
+                (a/parse-instruction a/keypad-a)))))
+  (testing "puzzle B"
+    (is (= "CB779"
+           (->> (io/resource "dec2.txt")
+                (slurp)
+                (a/parse-instruction a/keypad-b))))))
 
 (deftest moving-test
   (testing "it moves to the correct pos on the keypad"
@@ -39,5 +55,4 @@
     (is (= [1 0] (a/dir->coords [1 1] "U")))
     (is (= [0 -1] (a/dir->coords [0 0] "U"))))
   (testing "delta"
-    (is (= [0 -1] (a/delta "U")))
-    ))
+    (is (= [0 -1] (a/delta "U")))))

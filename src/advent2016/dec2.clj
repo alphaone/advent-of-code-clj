@@ -7,6 +7,13 @@
    ["4" "5" "6"]
    ["7" "8" "9"]])
 
+(def keypad-b
+  [[nil nil "1" nil nil]
+   [nil "2" "3" "4" nil]
+   ["5" "6" "7" "8" "9"]
+   [nil "A" "B" "C" nil]
+   [nil nil "D" nil nil]])
+
 (defn coords [keypad num]
   (->> (comb/cartesian-product (range (-> keypad first count))
                                (range (-> keypad count)))
@@ -21,7 +28,7 @@
     [(+ x dx) (+ y dy)]))
 
 (defn move [keypad cur-num dir]
-  (let [[x y] (-> (coords keypad cur-num) 
+  (let [[x y] (-> (coords keypad cur-num)
                   (dir->coords dir))]
     (if-let [new-num (get-in keypad [y x])]
       new-num
