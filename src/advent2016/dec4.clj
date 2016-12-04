@@ -7,7 +7,7 @@
       (compare ch-a ch-b)
       freq-cmp)))
 
-(defn checksum [room-name]
+(defn calc-checksum [room-name]
   (->> (cs/replace room-name #"\d|-" "")
        (frequencies)
        (sort compare-letter-freq)
@@ -17,12 +17,12 @@
 
 (defn parse [room]
   (let [result (re-find #"(.*)-(\d+)\[(.*)\]" room)]
-    [(nth result 1)
-     (read-string (nth result 2))
-     (nth result 3)]))
+    {:name (nth result 1)
+     :department (read-string (nth result 2))
+     :checksum (nth result 3)}))
 
-(defn real? [[name _ given-checksum]]
-  (= given-checksum (checksum name)))
+(defn real? [{:keys [name checksum]}]
+  (= checksum (calc-checksum name)))
 
 (defn real-rooms [input]
   (->> (cs/split input #"\n")
@@ -31,7 +31,7 @@
 
 (defn solve-a [input]
   (->> (real-rooms input)
-       (map second)
+       (map :department)
        (reduce +)))
 
 (defn rotate-char [ch]
@@ -48,7 +48,7 @@
 (defn decypher [[name department]]
   (nth (iterate rotate-name name) department))
 
-(defn storage? [[name department _]]
+(defn storage? [{:keys [name department]}]
   (= "northpole object storage"
      (decypher [name department])))
 
@@ -56,4 +56,4 @@
   (->> (real-rooms input)
        (filter storage?)
        (first)
-       (second)))
+       :department))

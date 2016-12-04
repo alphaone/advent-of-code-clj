@@ -5,14 +5,22 @@
 
 (deftest checksum-test
   (testing "it calcs the check-sum of a room name"
-    (is (= "abxyz" (a/checksum "aaaaa-bbb-z-y-x-123")))
-    (is (= "abcde" (a/checksum "a-b-c-d-e-f-g-h-987")))
-    (is (= "oarel" (a/checksum "not-a-real-room-404"))))
+    (is (= "abxyz" (a/calc-checksum "aaaaa-bbb-z-y-x-123")))
+    (is (= "abcde" (a/calc-checksum "a-b-c-d-e-f-g-h-987")))
+    (is (= "oarel" (a/calc-checksum "not-a-real-room-404"))))
   (testing "it knows when a room is real"
-    (is (a/real? ["aaaaa-bbb-z-y-x" 123 "abxyz"]))
-    (is (a/real? ["a-b-c-d-e-f-g-h" 987 "abcde"]))
-    (is (a/real? ["not-a-real-room" 404 "oarel"]))
-    (is (not (a/real? ["totally-real-room" 200 "decoy"])))))
+    (is (a/real? {:name "aaaaa-bbb-z-y-x" 
+                  :department 123 
+                  :checksum "abxyz"}))
+    (is (a/real? {:name "a-b-c-d-e-f-g-h" 
+                  :department 987 
+                  :checksum "abcde"}))
+    (is (a/real? {:name "not-a-real-room" 
+                  :department 404 
+                  :checksum "oarel"}))
+    (is (not (a/real? {:name "totally-real-room" 
+                       :department 200 
+                       :checksum "decoy"})))))
 
 (deftest compare-test
   (testing "it can compare letter frequencies"
@@ -21,9 +29,14 @@
 
 (deftest parse-test
   (testing "it parses a room into name and checksum"
-    (is (= ["aaaaa-bbb-z-y-x" 123 "abxyz"]
+    (is (= {:name "aaaaa-bbb-z-y-x"
+            :department 123
+            :checksum "abxyz"}
            (a/parse "aaaaa-bbb-z-y-x-123[abxyz]")))
-    (is (= ["totally-real-room" 200 "decoy"]
+    (is (= {:name "totally-real-room"
+            :department 200 
+            :checksum "decoy"
+            }
            (a/parse "totally-real-room-200[decoy]")))))
 
 (deftest puzzle-test
