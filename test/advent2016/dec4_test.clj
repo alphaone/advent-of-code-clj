@@ -31,4 +31,18 @@
     (is (= 361724
            (-> (io/resource "dec4.txt")
                (slurp)
-               (a/solve))))))
+               (a/solve-a))))
+    (is (= 482
+           (-> (io/resource "dec4.txt")
+               (slurp)
+               (a/solve-b))))))
+
+(deftest shift-cypher-test
+  (testing "rotating chars"
+    (is (= \B (a/rotate-char \A)))
+    (is (= \b (a/rotate-char \a)))
+    (is (= \a (a/rotate-char \z))))
+  (testing "it decyphers a room name"
+    (is (= "very encrypted name"
+           (a/decypher ["qzmt-zixmtkozy-ivhz" 343])))))
+
