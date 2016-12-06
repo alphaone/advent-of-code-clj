@@ -19,7 +19,7 @@
                   :department 404 
                   :checksum "oarel"}))
     (is (not (a/real? {:name "totally-real-room" 
-                       :department 200 
+                       :department 200
                        :checksum "decoy"})))))
 
 (deftest compare-test
