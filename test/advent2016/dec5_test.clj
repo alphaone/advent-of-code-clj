@@ -1,9 +1,7 @@
 (ns advent2016.dec5-test
   (:require [clojure.test :refer :all]
-            [clojure.java.io :as io]
             [digest]
-            [advent2016.dec5 :as a]
-            [clojure.string :as cs]))
+            [advent2016.dec5 :as a]))
 
 (deftest md5-test
   (testing "it calcs the md5 hash"
