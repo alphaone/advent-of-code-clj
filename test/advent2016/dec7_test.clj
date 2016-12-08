@@ -11,6 +11,13 @@
     (is (not (a/supports-tls? "aaaa[qwer]tyui")))
     (is (a/supports-tls? "ioxxoj[asdfgh]zxcvbn"))))
 
+(deftest supports-ssl-test
+  (testing "it knows if a IP supports SSL"
+    (is (a/supports-ssl? "aba[bab]xyz"))
+    (is (not (a/supports-ssl? "xyx[xyx]xyx")))
+    (is (a/supports-ssl? "aaa[kek]eke"))
+    (is (a/supports-ssl? "zazbz[bzb]cdb"))))
+
 (deftest abba-test
   (testing "it finds ABBA sequences"
     (is (a/abba? "abba"))
@@ -18,9 +25,21 @@
     (is (not (a/abba? "abcba")))
     (is (not (a/abba? "aaaa")))))
 
-(deftest parse--test
+(deftest aba-test
+  (testing "it finds all ABA sequences"
+    (is (= [["a" "b"] ["a" "c"]]
+           (a/aba "abaca")))))
+
+(deftest bab-test
+  (testing "it finds BAB sequences with given ABA"
+    (is (a/bab? [["a" "b"]] "xbaby"))
+    (is (a/bab? [["x" "y"] ["a" "b"]] "xbaby"))
+    (is (not (a/bab? [["x" "y"] ["a" "b"]] "xbby")))
+    (is (not (a/bab? [] "xbby")))))
+
+(deftest parse-test
   (testing "it parses an IP"
-    (is (= [["part1" "part2"] ["hypernet"]  ]
+    (is (= [["part1" "part2"] ["hypernet"]]
            (a/parse "part1[hypernet]part2")))
     (is (= [["luutcuiwkuvjayjmhvt" "pksxicdhklgeispteho" "jywabkhdqggvpryxzfv"]
             ["vwabmnqpyzuoxgfan" "cjhxxwfqxxrpwzoozxp"]]
@@ -29,9 +48,11 @@
 (deftest puzzle-test
   (testing "it solves the puzzle"
     (let [ips (-> (io/resource "dec7.txt")
-                    (slurp)
-                    (cs/split #"\n"))]
-      (is (= 115
-             (->> ips
-                  (filter a/supports-tls?)
-                  (count)))))))
+                  (slurp)
+                  (cs/split #"\n"))]
+      (is (= 115 (->> ips
+                      (filter a/supports-tls?)
+                      (count))))
+      (is (= 231 (->> ips
+                      (filter a/supports-ssl?)
+                      (count)))))))
