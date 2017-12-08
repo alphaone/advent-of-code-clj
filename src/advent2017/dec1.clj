@@ -1,11 +1,10 @@
-(ns advent2017.dec1
-  (:require [clojure.string :as cs]))
+(ns advent2017.dec1)
 
 (defn extract-digit [[_ n]] 
   (Integer/parseInt n))
 
 (defn- make-ring [s]
-  (str s (subs s 0 1)))
+  (str s (first s)))
 
 (defn captcha-a [input]
   (->> input
