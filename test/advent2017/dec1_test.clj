@@ -1,7 +1,6 @@
 (ns advent2017.dec1-test
   (:require [clojure.test :refer :all]
             [advent2017.dec1 :as a]
-            [clojure.string :as cs]
             [clojure.java.io :as io]))
 
 (deftest make-ring-test
@@ -45,3 +44,8 @@
   (testing "it should"
     (is (= 1146
            (a/captcha-b (slurp (io/resource "dec1.txt")))))))
+
+(deftest shift-test
+  (testing "it "
+    (is (= [:c :d :a :b]
+           (a/shift 2 [:a :b :c :d])))))

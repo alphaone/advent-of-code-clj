@@ -1,8 +1,5 @@
 (ns advent2017.dec1)
 
-(defn extract-digit [[_ n]] 
-  (Integer/parseInt n))
-
 (defn- make-ring [s]
   (str s (first s)))
 
@@ -10,14 +7,15 @@
   (->> input
        (make-ring)
        (re-seq #"(\d)(?=\1)")
-       (map extract-digit)
+       (map second)
+       (map #(Integer/parseInt (str %)))
        (reduce +)))
 
 (defn matching-digits [input i]
-  (let [l (count input)
+  (let [l      (count input)
         offset (/ l 2)
-        x (nth input i)
-        x' (nth input (mod (+ i offset) l))]
+        x      (nth input i)
+        x'     (nth input (mod (+ i offset) l))]
     (when (= x x') x)))
 
 (defn captcha-b [input]
@@ -26,3 +24,20 @@
          (keep (partial matching-digits input))
          (map #(Integer/parseInt (str %)))
          (reduce +))))
+
+(defn shift [offset list]
+  (concat (drop offset list) (take offset list)))
+
+(defn captcha [offset input]
+  (let [input' (shift offset input)]
+    (->> (map #(when (= %1 %2) %2) input input')
+         (remove nil?)
+         (map #(Integer/parseInt (str %)))
+         (reduce +))))
+
+(defn captcha-b [input]
+  (let [offset (/ (count input) 2)]
+    (captcha offset input)))
+
+(defn captcha-a [input]
+  (captcha 1 input))
