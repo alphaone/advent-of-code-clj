@@ -1,11 +1,11 @@
 (ns advent2017.dec1)
 
-(defn- make-ring [s]
+(defn- make-pseudo-ring [s]
   (str s (first s)))
 
 (defn captcha-a [input]
   (->> input
-       (make-ring)
+       (make-pseudo-ring)
        (re-seq #"(\d)(?=\1)")
        (map second)
        (map #(Integer/parseInt (str %)))
@@ -30,8 +30,7 @@
 
 (defn captcha [offset input]
   (let [input' (shift offset input)]
-    (->> (map #(when (= %1 %2) %2) input input')
-         (remove nil?)
+    (->> (map #(if (= %1 %2) %2 \0) input input')
          (map #(Integer/parseInt (str %)))
          (reduce +))))
 
