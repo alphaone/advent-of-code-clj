@@ -24,10 +24,15 @@
   (let [f (op->f (:op cmd))]
     (fnil (fn [v] (f v (:val cmd))) 0)))
 
-(defn step [register {:keys [cmd cond]}]
-  (if ((make-cmd cond) (get register (:var cond)))
-    (update register (:var cmd) (make-cmd cmd))
-    register))
-
 (defn max-value [register]
-  (apply max (vals register)))
+  (if (empty? register)
+    0
+    (apply max (vals register))))
+
+(defn step [acc {:keys [cmd cond]}]
+  (if ((make-cmd cond) (get-in acc [:register (:var cond)]))
+    (-> acc 
+        (update-in [:register (:var cmd)] (make-cmd cmd))
+        (update :max conj (max-value (:register acc))))
+    acc))
+

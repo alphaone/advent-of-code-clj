@@ -35,5 +35,16 @@
            (->> (slurp (io/resource "dec8.txt"))
                 (cs/split-lines)
                 (map a/parse-line)
-                (reduce a/step {})
+                (reduce a/step {:register {}})
+                :register
                 (a/max-value))))))
+
+(deftest solve-a-test
+  (testing "it should"
+    (is (= 6026
+           (->> (slurp (io/resource "dec8.txt"))
+                (cs/split-lines)
+                (map a/parse-line)
+                (reduce a/step {:register {}})
+                :max
+                (apply max))))))
