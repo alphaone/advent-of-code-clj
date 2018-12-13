@@ -1,29 +1,28 @@
-(ns advent2018.dec9)
+(ns advent2018.dec9
+  (:import (java.util Deque ArrayDeque)))
 
-(defn new-pos [diff {:keys [last-pos marbles]}]
-  (if (empty? marbles)
-    0
-    (let [x (mod (+ diff last-pos) (count marbles))]
-      (if (zero? x) (count marbles) x))))
+(defn rotate! [^Deque deque ^Integer amount]
+  (let [forward   (fn [_] (.addLast deque (.removeFirst deque)))
+        backwards (fn [_] (.addFirst deque (.removeLast deque)))]
+    (when-not (.isEmpty deque)
+      (if (pos? amount)
+        (run! forward (range amount))
+        (run! backwards (range (Math/abs amount))))))
+  deque)
 
-(defn default-turn [{:keys [marbles scores] :as circle} [p i]]
-  (let [new-pos (new-pos 2 circle )
-        [before after] (split-at new-pos marbles)]
-    {:scores   scores
-     :last-pos new-pos
-     :marbles  (doall (concat before [i] after))}))
+(defn default-turn [{:keys [^Deque marbles scores]} [p i]]
+  (rotate! marbles 2)
+  (.addFirst marbles i)
+  {:scores   scores
+   :marbles  marbles})
 
 (defn twenty-three-turn [{:keys [marbles scores] :as circle} [p i]]
-  (let [new-pos (new-pos -7 circle)
-        [before after] (split-at new-pos marbles)
-        score   (+ i (first after))
-        after' (drop 1 after)]
+  (rotate! marbles -7)
+  (let [score   (+ i (.removeFirst marbles))]
     {:scores   (update scores p (fnil + 0) score)
-     :last-pos new-pos
-     :marbles  (doall (concat before after'))}))
+     :marbles  marbles}))
 
 (defn add-to-circle [circle [p i]]
-  (when (zero? (mod i 2500)) (println "MarbleNr:" i))
   (if (and (< 0 i) (zero? (mod i 23)))
     (twenty-three-turn circle [p i])
     (default-turn circle [p i])))
@@ -31,9 +30,8 @@
 (defn play [no-of-players max]
   (->> (map vector (cycle (range no-of-players)) (range (inc max)))
        (reduce add-to-circle
-               {:last-pos 0
-                :marbles  []
-                :scores   {}})
+               {:marbles (ArrayDeque. [])
+                :scores  {}})
        :scores
        (sort-by (comp - val))
        (first)))

@@ -46,7 +46,7 @@
 (defn find-problematic-unit [polymer]
   (->> (map #(without-char polymer %) (char-range \a \z))
        (pmap (fn [[c p]] [c (count (react-polymer p))]))
-       (sort-by (comp second))
+       (sort-by second)
        (first)))
 
 (defn solve-b []
