@@ -1,1 +1,8 @@
 language: clojure
+env:
+ - TEST_DIR=2015
+ - TEST_DIR=2016
+ - TEST_DIR=2017
+ - TEST_DIR=2018
+
+before_install: cd $TEST_DIR
