@@ -56,3 +56,7 @@
   (testing "expand"
     (is (= ["R1" "S1" "S1"]
            (a/expand "R3")))))
+
+(deftest find-first-twice-test
+  (is (= :a
+         (a/first-twice [:b :a :c :a :b :c]))))
