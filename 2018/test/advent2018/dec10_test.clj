@@ -56,25 +56,6 @@
           [[3 -2] [-1 1]]]
          (take 3 sample-dots))))
 
-(deftest draw-test
-  (is (= (str "........#.............\n"
-              "................#.....\n"
-              ".........#.#..#.......\n"
-              "......................\n"
-              "#..........#.#.......#\n"
-              "...............#......\n"
-              "....#.................\n"
-              "..#.#....#............\n"
-              ".......#..............\n"
-              "......#...............\n"
-              "...#...#.#...#........\n"
-              "....#..#..#.........#.\n"
-              ".......#..............\n"
-              "...........#..#.......\n"
-              "#...........#.........\n"
-              "...#.......#..........")
-         (a/draw sample-dots))))
-
 (deftest fly-test
   (is (= [[[9 3] [0 2]]
           [[6 0] [-1 0]]
@@ -82,30 +63,32 @@
          (take 3 (a/fly sample-dots)))))
 
 (deftest scale
-  (is (= -10 (a/scale -50000 50000  -10 1000 -50000)))
+  (is (= -10 (a/scale -50000 50000 -10 1000 -50000)))
   (is (= 1000 (a/scale -50000 50000 -10 1000 50000))))
 
 (defn setup []
   (q/smooth)
   (q/frame-rate 5))
 
-(deftest visulize-a-test
-  (let [states (atom (drop 10600 (reductions (fn [acc _] (a/fly acc)) dots (range))))]
-    (q/defsketch testsketch
-      :renderer :opengl
-      :setup setup
-      :size [1400 1000]
-      :draw #(a/draw-reductions states))
-    ))
+(comment
+  (deftest visulize-a-test
+    (let [states (atom (drop 10600 (reductions (fn [acc _] (a/fly acc)) dots (range))))]
+      (q/defsketch testsketch
+        :renderer :opengl
+        :setup setup
+        :size [1400 1000]
+        :draw #(a/draw-reductions states))
+      )))
 
-(deftest solve-a-b-test
-  (let [dots (first (drop 10656 (reductions (fn [acc _] (a/fly acc)) dots (range))))]
-    (q/defsketch testsketch
-      :renderer :opengl
-      :setup setup
-      :size [1400 1000]
-      :draw #(a/draw-dots dots))
-    )
-  ; XLZAKBGZ
-  ; 10656
-  )
+(comment
+  (deftest solve-a-b-test
+    (let [dots (first (drop 10656 (reductions (fn [acc _] (a/fly acc)) dots (range))))]
+      (q/defsketch testsketch
+        :renderer :opengl
+        :setup setup
+        :size [1400 1000]
+        :draw #(a/draw-dots dots))
+      )
+    ; XLZAKBGZ
+    ; 10656
+    ))

@@ -1,15 +1,10 @@
 (ns advent2018.dec10
-  (:require [clojure.string :as cs]
-            [quil.core :as q]
-            [clojure.java.io :as io]))
+  (:require [quil.core :as q]))
 
 (defn parse [line]
   (let [[_ x y vx vy] (re-find #"position=<\s*(\-?\d+),\s*(\-?\d+)> velocity=<\s*(-?\d+),\s*(-?\d+)>" line)]
     [[(Integer/parseInt x) (Integer/parseInt y)]
      [(Integer/parseInt vx) (Integer/parseInt vy)]]))
-
-(defn draw-point [[origin-x origin-y] grid [x y]]
-  (update grid (- y origin-y) assoc (- x origin-x) "#"))
 
 (defn scale [min-v max-v min-t max-t i]
   (+ (* (/ (- i min-v) (- max-v min-v))
