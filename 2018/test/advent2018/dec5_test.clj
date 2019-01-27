@@ -10,21 +10,22 @@
   (is (not (a/react? \a \b)))
   (is (not (a/react? \a \B))))
 
-(deftest react-polymer*-test
-  (is (= "" (a/react-polymer* "aA")))
-  (is (= "abAB" (a/react-polymer* "abAB")))
-  (is (= "aabAAB" (a/react-polymer* "aabAAB")))
-  (is (= "aA" (a/react-polymer* "abBA"))))
+(deftest react-neighbors-test
+  (is (= [\a] (a/react-neighbors [] \a)))
+  (is (= [] (a/react-neighbors [\a] \A)))
+  (is (= [\a \b] (a/react-neighbors [\a] \b)))
+  (is (= [\a \b \c] (a/react-neighbors [\a \b] \c)))
+  (is (= [\a \b] (a/react-neighbors [\a \b \c] \C))))
 
 (deftest react-polymer-test
-  (is (= "" (a/react-polymer "aA")))
-  (is (= "abAB" (a/react-polymer "abAB")))
-  (is (= "aabAAB" (a/react-polymer "aabAAB")))
-  (is (= "" (a/react-polymer "abBA"))))
+  (is (= [] (a/react-polymer "aA")))
+  (is (= [\a \b \A \B] (a/react-polymer "abAB")))
+  (is (= [\a \a \b \A \A \B] (a/react-polymer "aabAAB")))
+  (is (= [] (a/react-polymer "abBA"))))
 
 (deftest solva-a-test
   (is (= 10886
-         (time (a/solve-a)))))
+         (a/solve-a))))
 
 (deftest find-problematic-unit-test
   (is (= [\c 4]
@@ -32,4 +33,4 @@
 
 (deftest solve-b-test
   (is (= [\v 4684]
-         (time (a/solve-b)))))
+         (a/solve-b))))

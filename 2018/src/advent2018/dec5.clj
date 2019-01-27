@@ -8,25 +8,13 @@
       (and (= (Character/toUpperCase char-a) char-b)
            (= char-a (Character/toLowerCase char-b)))))
 
-(defn react-polymer* [polymer]
-  (loop [[f s & rest-polymer] polymer
-         reacted ""]
-    (if (nil? s)
-      (str reacted f)
-      (let [f-s-react?    (react? f s)
-            rest-polymer' (if f-s-react?
-                            rest-polymer
-                            (conj rest-polymer s))
-            reacted'      (if f-s-react?
-                            reacted
-                            (str reacted f))]
-        (recur rest-polymer' reacted')))))
+(defn react-neighbors [st elem]
+  (if (and (peek st) (react? elem (peek st)))
+    (pop st)
+    (conj st elem)))
 
 (defn react-polymer [polymer]
-  (let [reacted (react-polymer* polymer)]
-    (if (= reacted polymer)
-      polymer
-      (recur reacted))))
+  (reduce react-neighbors [] polymer))
 
 (defn solve-a []
   (->> "dec5.txt"
