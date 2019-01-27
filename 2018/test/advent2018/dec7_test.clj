@@ -102,7 +102,7 @@
 
 (deftest assign-work-test
   (is (= {:graph   {:B #{:A}}
-          :workers [[] [] [] [] [:A 60]]}
+          :workers [[] [] [] [] [:A 61]]}
          (a/assign-work {:A #{}
                          :B #{:A}} [[] [] [] []])))
   (is (= {:graph   {:A #{}
