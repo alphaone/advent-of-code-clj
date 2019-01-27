@@ -15,7 +15,8 @@
 
 (deftest step-test
   (testing "it should"
-    (is (= {:b 5}
+    (is (= {:max      [0]
+            :register {:b 5}}
            (a/step {}
                    {:cmd  {:var :b :op :inc :val 5}
                     :cond {:var :a :op :< :val 10}})))

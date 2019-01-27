@@ -56,13 +56,11 @@
            (a/find-unbalanced  :w [{:w 10} {:w 10} {:w 10} {:w 9}])))))
 
 (deftest find-wrong-weight-test
-  (testing "it should"
-    (testing "it should"
-      (let [tree (a/->tree (-> (slurp (io/resource "dec7.txt"))
-                               (a/all-programs)
-                               (a/named))
-                           "hlqnsbe")]
-        (is (= {:siblings          (2102 2097 2097 2097 2097)
-                :wrong-weight-node {:cum-weight 2102
-                                    :weight     1998}}
-               (a/find-wrong-weight [] tree)))))))
+  (let [tree (a/->tree (-> (slurp (io/resource "dec7.txt"))
+                           (a/all-programs)
+                           (a/named))
+                       "hlqnsbe")]
+    (is (= {:siblings          [2102 2097 2097 2097 2097]
+            :wrong-weight-node {:cum-weight 2102
+                                :weight     1998}}
+           (a/find-wrong-weight [] tree)))))

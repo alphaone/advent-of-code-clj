@@ -39,10 +39,10 @@
   (testing "it solves the puzzle"
     (is (= 4 (a/count-steps a/step-a "1\n3\n0\n1\n-3")))
     (is (= 358309
-           (a/count-steps a/step-a (slurp (io/resource "dec5.txt")))))))
+           (time (a/count-steps a/step-a (slurp (io/resource "dec5.txt"))))))))
 
 (deftest solve-b-test
   (testing "it solves the puzzle"
     (is (= 9 (a/count-steps a/step-b "1\n3\n0\n1\n-3")))
     (is (= 28178177
-           (a/count-steps a/step-b (slurp (io/resource "dec5.txt")))))))
+           (time (a/count-steps a/step-b (slurp (io/resource "dec5.txt"))))))))
