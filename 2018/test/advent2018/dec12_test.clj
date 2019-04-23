@@ -34,10 +34,11 @@
 
 (deftest evolve-test
   (is (= [-2 "..###########."]
-         (-> (a/evolve 10
-                       {".#..." \#
+         (-> (a/evolve {".#..." \#
                         "##..." \#}
                        {0 \#})
+             (drop 10)
+             (first)
              (a/pots->string)))))
 
 (deftest sum-up-plant-pots-test
@@ -80,7 +81,13 @@
 
 (deftest solve-a-test
   (is (= 3421
-         (-> (a/evolve 20
-                       rules
-                       (a/string->pots input-a))
-             (a/sum-up-plant-pots)))))
+         (->> (a/evolve rules
+                        (a/string->pots input-a))
+              (drop 20)
+              (first)
+              (a/sum-up-plant-pots)))))
+
+(deftest sum-up-plant-pots-b-test
+  (is (= 6244 (a/sum-up-plant-pots-b 99)))
+  (is (= 6754 (a/sum-up-plant-pots-b 109)))
+  (is (= 2550000001195 (a/sum-up-plant-pots-b 50000000000))))

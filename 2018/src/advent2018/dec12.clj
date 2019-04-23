@@ -26,11 +26,6 @@
   (let [positions (range (min-pot old-pots) (inc (max-pot old-pots)))]
     (reduce (partial f rules old-pots) {} positions)))
 
-(defn evolve [number-of-generations rules starting-pots]
-  (->> starting-pots
-       (iterate (partial next-gen rules))
-       (drop number-of-generations)
-       (first)))
 
 (defn sum-up-plant-pots [pots]
   (->> pots
@@ -44,8 +39,25 @@
 
 (defn string->pots
   ([input]
-    (string->pots 0 input))
+   (string->pots 0 input))
   ([starting-pos input]
    (->> input
         (map-indexed (fn [i x] [(+ starting-pos i) x]))
         (into {}))))
+
+(defn evolve [rules starting-pots]
+  (->> starting-pots
+       (iterate (partial next-gen rules))))
+
+(defn print-gen [i [last curr]]
+  (let [sum-last (sum-up-plant-pots last)
+        sum-curr (sum-up-plant-pots curr)]
+    (println (format "%3d: %d (%d)" (inc i) sum-curr (- sum-curr sum-last)))))
+
+(defn print-gens [rules starting-pots n]
+  (doall (map-indexed print-gen (partition 2 1 (take n (evolve rules starting-pots)))))
+  nil)
+
+; + 51 in summed up plant pots starting from gen 99 (6244)
+(defn sum-up-plant-pots-b [number-of-generations]
+  (+ 6244 (* 51 (- number-of-generations 99))))
