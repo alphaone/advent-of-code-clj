@@ -1,0 +1,8 @@
+{:paths ["resources" "src"]
+ :deps  {}
+ :aliases
+        {:run      {:main-opts ["-m" "main"]}
+         :test     {:extra-paths ["test"]
+                    :extra-deps  {lambdaisland/kaocha {:mvn/version "0.0-266"}}}
+         :outdated {:extra-deps {olical/depot {:mvn/version "1.0.1"}}
+                    :main-opts  ["-m" "depot.outdated.main"]}}}
