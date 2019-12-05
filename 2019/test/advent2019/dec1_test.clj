@@ -12,3 +12,13 @@
 (deftest solve-part1-test
   (testing "it solves part1"
     (is (= 3173518 (d/solve-part1)))))
+
+(deftest recursive-fuel-test
+  (testing "it calculates the needed fuel (even for the mass of the fuel)"
+    (is (= 2 (d/recursive-fuel 12)))
+    (is (= 966 (d/recursive-fuel 1969)))
+    (is (= 50346 (d/recursive-fuel 100756)))))
+
+(deftest solve-part2-test
+  (testing "it solves part2"
+    (is (= 4757427 (d/solve-part2)))))
