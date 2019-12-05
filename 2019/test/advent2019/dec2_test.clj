@@ -21,4 +21,9 @@
 
 (deftest solve-part1-test
   (testing "it solves part1"
-    (is (= 5434663 (d/solve-part1)))))
+    (is (= 5434663 (d/solve-part1 12 2)))))
+
+(deftest solve-part2-test
+  (testing "it solves part2"
+    (is (= [45 59 19690720]
+           (d/solve-part2)))))

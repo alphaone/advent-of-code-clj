@@ -38,11 +38,16 @@
        (map #(Integer/parseInt %))
        vec))
 
-(defn solve-part1 []
-  (let [noun 12
-        verb 2]
-    (-> (read-input)
-        (assoc 1 noun
-               2 verb)
-        (process 0)
-        first)))
+(defn solve-part1 [noun verb]
+  (-> (read-input)
+      (assoc 1 noun
+             2 verb)
+      (process 0)
+      first))
+
+(defn solve-part2 []
+  (->> (for [noun (range 100)
+             verb (range 100)]
+         [noun verb (solve-part1 noun verb)])
+       (filter (fn [[_ _ res]] (= res 19690720)))
+       first))
