@@ -30,8 +30,8 @@
   (is (= [:line3] (day3/new-map [3 2] [:line1 :line2 :line3]))))
 
 (deftest trees-test
-  (is (= 1 (day3/trees 0 "#.")))
-  (is (= 0 (day3/trees 1 "#."))))
+  (is (= 1 (day3/trees-in-line 0 "#.")))
+  (is (= 0 (day3/trees-in-line 1 "#."))))
 
 (def input
   (->> (io/resource "day3.txt")
@@ -47,3 +47,9 @@
          (->> [[1 1] [3 1] [5 1] [7 1] [1 2]]
               (map #(day3/trees-on-slope % 0 0 input))
               (reduce *)))))
+
+(deftest solve-a-alternative
+  (is (= 7
+         (day3/trees-on-slope-alternative [3 1] [0 0] example-map)))
+  (is (= 228
+         (day3/trees-on-slope-alternative [3 1] [0 0] input))))
