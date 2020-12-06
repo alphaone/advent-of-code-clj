@@ -3,7 +3,7 @@
 
 (defn seat-id [input]
   (-> input
-      (str/replace  "B" "1")
+      (str/replace "B" "1")
       (str/replace "F" "0")
       (str/replace "R" "1")
       (str/replace "L" "0")
