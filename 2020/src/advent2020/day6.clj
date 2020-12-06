@@ -1,11 +1,10 @@
 (ns advent2020.day6
-  (:require [clojure.set :as set]
-            [clojure.string :as str]))
+  (:require [clojure.string :as str]))
 
-(defn any-answers [group]
+(defn count-answers [f group]
   (->> group
        (map set)
-       (apply set/union)
+       (apply f)
        count))
 
 (defn input->groups [input]
