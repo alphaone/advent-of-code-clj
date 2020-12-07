@@ -59,5 +59,26 @@
              (day7/parse-input)
              (day7/invert-bags)
              (day7/can-contain? "shiny gold")
-             count)))
-  )
+             count))))
+
+(deftest parse-2
+  (is (= {"bright white" {"shiny gold" 1}
+          "dark olive"   {"dotted black" 4 "faded blue"   3}
+          "dark orange"  {"bright white" 3 "muted yellow" 4}
+          "dotted black" {}
+          "faded blue"   {}
+          "light red"    {"bright white" 1 "muted yellow" 2}
+          "muted yellow" {"faded blue" 9 "shiny gold" 2}
+          "shiny gold"   {"dark olive"   1 "vibrant plum" 2}
+          "vibrant plum" {"dotted black" 6 "faded blue"   5}}
+         (day7/parse-input2 example-input))))
+
+(deftest solve-b
+  (is (= 32
+         (-> example-input
+             (day7/parse-input2)
+             (day7/needed-bags "shiny gold"))))
+  (is (= 176035
+         (-> (str/split-lines input)
+             (day7/parse-input2)
+             (day7/needed-bags "shiny gold")))))
