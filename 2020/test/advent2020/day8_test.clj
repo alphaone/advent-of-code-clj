@@ -42,12 +42,21 @@
 
 (deftest solve-a
   (is (= [1 5]
-         (->> (iterate day8/step [example-input #{0} 0 0])
-              (drop-while (complement reduced?))
-              first
-              deref)))
+         (day8/solve example-input)))
   (is (= [108 1586]
-         (->> (iterate day8/step [input #{0} 0 0])
-              (drop-while (complement reduced?))
-              first
-              deref))))
+         (day8/solve input))))
+
+(deftest mutate-code-test
+  (is (= [[[:acc 5] [:nop -1] [:acc 3] [:nop 4]]
+          [[:acc 5] [:jmp -1] [:acc 3] [:jmp 4]]]
+         (day8/mutate-code [[:acc 5] [:jmp -1] [:acc 3] [:nop 4]]))))
+
+(deftest solve-b
+  (is (= [[:done 9 8]]
+         (->> (day8/mutate-code example-input)
+              (map day8/solve)
+              (filter (comp #(= :done %) first)))))
+  (is (= [[:done 641 703]]
+         (->> (day8/mutate-code input)
+              (map day8/solve)
+              (filter (comp #(= :done %) first))))))
