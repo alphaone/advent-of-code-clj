@@ -25,14 +25,9 @@
        first
        deref))
 
-(defn mutate-op [[cmd arg]]
-  (case cmd
-    :nop [:jmp arg]
-    :jmp [:nop arg]))
-
 (defn mutate-code [input]
   (keep-indexed
     (fn [i op]
       (when (contains? #{:jmp :nop} (first op))
-        (assoc input i (mutate-op op))))
+        (update-in input [i 0] {:jmp :nop :nop :jmp})))
     input))
