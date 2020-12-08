@@ -1,0 +1,32 @@
+name: Kaocha Tester
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+jobs:
+  test:
+    name: Run kaocha tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Install clojure tools-deps
+        uses: DeLaGuardo/setup-clojure@master
+        with:
+          tools-deps: 1.10.1.693
+
+      - name: koacha 2019
+        run: ./bin/kaocha
+        working-directory: '2019'
+
+      - name: koacha 2020
+        run: ./bin/kaocha
+        working-directory: '2020'
+

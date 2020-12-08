@@ -41,9 +41,9 @@
                 (mapv day8/parse)))
 
 (deftest solve-a
-  (is (= [1 5]
+  (is (= [:loop 1 5]
          (day8/solve example-input)))
-  (is (= [108 1586]
+  (is (= [:loop 108 1586]
          (day8/solve input))))
 
 (deftest mutate-code-test
