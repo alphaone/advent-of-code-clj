@@ -16,3 +16,17 @@
        (filter (fn [[preamble x]] (not (valid? preamble x))))
        (first)
        (second)))
+
+(defn encryption-weakness [partition]
+  (+ (apply min partition)
+     (apply max partition)))
+
+(defn solve-b
+  ([target input] (solve-b target 2 input))
+  ([target size input]
+   (let [partitions (->> input
+                         (partition size 1)
+                         (filter #(= target (apply + %))))]
+     (if (seq partitions)
+       {:size size :weakness (map encryption-weakness partitions)}
+       (recur target (inc size) input)))))
