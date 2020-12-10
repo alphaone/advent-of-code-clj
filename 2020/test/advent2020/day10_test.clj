@@ -25,16 +25,10 @@
   (is (= 2059
          (day10/solve-a input))))
 
-(deftest valid-test
-  (is (day10/valid? [1 2 3]))
-  (is (day10/valid? [1 4 7]))
-  (is (not (day10/valid? [1 4 8]))))
-
 (deftest solve-b
   (is (= 8
-         (count (day10/solve-b example-input))))
-  ;; takes already too long :\
-  #_(is (= 19208
-         (count (day10/solve-b example-input2))))
-  )
-
+         (day10/solve-b example-input)))
+  (is (= 19208
+         (day10/solve-b example-input2)))
+  (is (= 86812553324672
+         (day10/solve-b input))))
