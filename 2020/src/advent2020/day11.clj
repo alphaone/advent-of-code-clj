@@ -26,24 +26,51 @@
       :else
       (get-seat layout pos))))
 
-(defn parse [input]
-  (mapv #(vec (char-array %)) input))
-
-(defn advance [old-layout]
+(defn advance [rule old-layout]
   (reduce
-    (fn [new-layout [x y]] (assoc-in new-layout [y x] (apply-rule old-layout [x y])))
+    (fn [new-layout [x y]] (assoc-in new-layout [y x] (rule old-layout [x y])))
     old-layout
-    (for [x (range (count(first old-layout)))
+    (for [x (range (count (first old-layout)))
           y (range (count old-layout))]
       [x y])))
 
 (defn count-occupied [layout]
-  (frequencies (apply concat  layout)))
+  (frequencies (apply concat layout)))
 
-(defn find-stable [start-layout]
+(defn find-stable [rule start-layout]
   (->> start-layout
-       (iterate advance)
+       (iterate #(advance rule %))
        (partition 2 1)
        (drop-while (fn [[g1 g2]] (not= g1 g2)))
        ffirst
        count-occupied))
+
+(defn look-in-direction [pos [fn-x fn-y]]
+  (next (iterate (fn [[x y]] [(fn-x x) (fn-y y)]) pos)))
+
+(defn seat-in-direction [layout pos dir]
+  (->> dir
+       (look-in-direction pos)
+       (drop-while #(= \. (get-seat layout %)))
+       first
+       (get-seat layout)))
+
+(defn adjacent-seats2 [pos layout]
+  (->> [[dec dec] [identity dec] [inc dec]
+        [dec identity] #_[identity identity] [inc identity]
+        [dec inc] [identity inc] [inc inc]]
+       (map #(seat-in-direction layout pos %))
+       frequencies))
+
+(defn apply-rule2 [layout pos]
+  (let [cur-seat (get-seat layout pos)
+        adj-seats (adjacent-seats2 pos layout)]
+    (cond
+      (and (= \L cur-seat) (nil? (adj-seats \#)))
+      \#
+
+      (and (= \# cur-seat) (<= 5 (adj-seats \# 0)))
+      \L
+
+      :else
+      (get-seat layout pos))))

@@ -19,6 +19,9 @@
                     "L.LLLLLL.L"
                     "L.LLLLL.LL"])
 
+(defn parse [input]
+  (mapv #(vec (char-array %)) input))
+
 (deftest adjacent-seats-test
   (is (= {\L 2 \. 1}
          (day11/adjacent-seats [0 0] example-input)))
@@ -26,17 +29,17 @@
          (day11/adjacent-seats [1 1] example-input))))
 
 (deftest apply-rule-test
-  (is (= \# (day11/apply-rule ["L.L" ".L." "L.L" ] [1 1])))
-  (is (= \# (day11/apply-rule ["L.L" ".#." "L.L" ] [1 1])))
-  (is (= \. (day11/apply-rule ["L.L" "..." "L.L" ] [1 1])))
-  (is (= \# (day11/apply-rule ["#.L" ".#." "#.#" ] [1 1])))
-  (is (= \L (day11/apply-rule ["#.#" ".#." "#.#" ] [1 1]))))
+  (is (= \# (day11/apply-rule ["L.L" ".L." "L.L"] [1 1])))
+  (is (= \# (day11/apply-rule ["L.L" ".#." "L.L"] [1 1])))
+  (is (= \. (day11/apply-rule ["L.L" "..." "L.L"] [1 1])))
+  (is (= \# (day11/apply-rule ["#.L" ".#." "#.#"] [1 1])))
+  (is (= \L (day11/apply-rule ["#.#" ".#." "#.#"] [1 1]))))
 
 (deftest parse-input-test
   (is (= [[\L \. \L]
           [\. \L \.]
           [\L \. \L]]
-         (day11/parse ["L.L" ".L." "L.L" ]))))
+         (parse ["L.L" ".L." "L.L"]))))
 
 (deftest advance-test
   (is (= ["#.##.##.##"
@@ -50,9 +53,9 @@
           "#.######.#"
           "#.#####.##"]
          (->> example-input
-             (day11/parse)
-             (day11/advance)
-             (map str/join))))
+              (parse)
+              (day11/advance day11/apply-rule)
+              (map str/join))))
   (is (= ["#.#L.L#.##"
           "#LLL#LL.L#"
           "L.#.L..#.."
@@ -64,14 +67,32 @@
           "#.LLLLLL.L"
           "#.#L#L#.##"]
          (->> example-input
-              (day11/parse)
-              (iterate day11/advance)
+              (parse)
+              (iterate #(day11/advance day11/apply-rule %))
               (drop 6)
               (first)
               (map str/join)))))
 
 (deftest solve-a
   (is (= {\# 37 \. 29 \L 34}
-         (day11/find-stable (day11/parse example-input))))
+         (day11/find-stable day11/apply-rule (parse example-input))))
   (is (= {\# 2283 \. 1635 \L 4992}
-         (day11/find-stable (day11/parse input)))))
+         (day11/find-stable day11/apply-rule (parse input)))))
+
+(deftest adjacent2-test
+  (is (= {\# 8}
+         (day11/adjacent-seats2 [3 4] (parse [".......#."
+                                              "...#....."
+                                              ".#......."
+                                              "........."
+                                              "..#L....#"
+                                              "....#...."
+                                              "........."
+                                              "#........"
+                                              "...#....."])))))
+
+(deftest solve-b
+  (is (= {\# 26 \. 29 \L 45}
+         (day11/find-stable day11/apply-rule2 (parse example-input))))
+  (is (= {\# 2054 \. 1635 \L 5221}
+         (day11/find-stable day11/apply-rule2 (parse input)))))
