@@ -38,3 +38,29 @@
               (map #(Math/abs %))
               (apply +)))))
 
+(deftest move2-test
+  (is (= [0 0 10 -11] (day12/move2 [0 0 10 -1] [:N 10])))
+  (is (= [0 0 10 9] (day12/move2 [0 0 10 -1] [:S 10])))
+  (is (= [0 0 20 -1] (day12/move2 [0 0 10 -1] [:E 10])))
+  (is (= [0 0 0 -1] (day12/move2 [0 0 10 -1] [:W 10])))
+
+  (is (= [0 0 -10 1] (day12/move2 [0 0 10 -1] [:R 180])))
+  (is (= [0 0 -10 1] (day12/move2 [0 0 10 -1] [:L 180])))
+  (is (= [0 0 1 10] (day12/move2 [0 0 10 -1] [:R 90])))
+  (is (= [0 0 -1 -10] (day12/move2 [0 0 10 -1] [:L 90])))
+  (is (= [0 0 -1 -10] (day12/move2 [0 0 10 -1] [:R 270])))
+  (is (= [0 0 1 10] (day12/move2 [0 0 10 -1] [:L 270])))
+
+  (is (= [100 -10 10 -1] (day12/move2 [0 0 10 -1] [:F 10])))
+  (is (= [170 -38 10 -4] (day12/move2 [100 -10 10 -4] [:F 7])))
+  )
+
+(deftest solve-b
+  (is (= [214 72 4 10]
+         (reduce day12/move2 [0 0 10 -1] example-input)))
+  (is (= 25235
+           (->> input
+                (reduce day12/move2 [0 0 10 -1])
+                (take 2)
+                (map #(Math/abs %))
+                (apply +)))))
