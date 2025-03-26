@@ -18,6 +18,12 @@
          (->> input
               (d/count-incrs)))))
 
+(deftest count-incrs
+  (is (= 3
+         (d/count-incrs [1 2 3 4])))
+  (is (= 3
+         (d/count-incrs [1 -1 2 0 3 4 3]))))
+
 (deftest solve-b
   (is (= 5
          (->> [199 200 208 210 200 207 240 269 260 263]
@@ -27,3 +33,7 @@
          (->> input
               (d/window-sum)
               (d/count-incrs)))))
+(deftest window-sum
+  (is (= [607 618 618 609]
+         (->> [199 200 208 210 200 199]
+              (d/window-sum)))))
